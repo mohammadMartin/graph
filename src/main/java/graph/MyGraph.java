@@ -1,7 +1,9 @@
 package graph;
 
 import java.util.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MyGraph {
     // Used Tree Map For Sort By Index
@@ -145,12 +147,10 @@ public class MyGraph {
         for (CloudLet v : neighbors) {
             List<Integer> edges = new ArrayList<>();
             for (CloudLet i : v.getDestination()) {
-                Set<Integer> collect = i.getDestination().stream().map(CloudLet::getIndex).collect(Collectors.toSet());
-                edges.addAll(collect);
+                edges.add(i.getIndex());
             }
             s.append("\n").append(v.getIndex()).append(" -> ").append(edges);
         }
-
         return s.toString();
     }
 }
