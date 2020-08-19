@@ -14,7 +14,7 @@ import java.util.Set;
 public class CloudLet implements Comparable<CloudLet> {
     private Integer index;
     private String name;
-    private Integer weight;
+    private Double weight;
     private Set<CloudLet> destination;
 
     @Override

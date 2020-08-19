@@ -1,5 +1,7 @@
 package graph;
 
+import distribution.StdRandom;
+
 import java.util.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -121,6 +123,7 @@ public class MyGraph {
         CloudLet cloudLet = new CloudLet();
         cloudLet.setIndex(vertex);
         cloudLet.setName("CloudLet - " + vertex);
+        cloudLet.setWeight(StdRandom.pareto());
         cloudLet.setDestination(new HashSet<>());
 
         // if cloudLet has in graph return else add to graph
