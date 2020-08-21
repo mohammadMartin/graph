@@ -15,7 +15,7 @@ public class MyGraph {
         // get Random Number vertex between 4 and 13
         int vertex = getRandomVertex();
 
-        vertex = 10;
+//        vertex = 10;
         // add CloudLet to graph
         for (int i = 1; i <= vertex; i++) {
             add(i);
@@ -26,8 +26,6 @@ public class MyGraph {
             setRandomEdge(cloudLet, getRandomEdge());
         }
 
-        inDegree();
-        outDegree();
         System.out.println();
     }
 
