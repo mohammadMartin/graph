@@ -1,21 +1,19 @@
 package graph;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
 public class CloudLet implements Comparable<CloudLet> {
     private Integer index;
     private String name;
-    private Integer weight;
-    private Set<CloudLet> destination;
+    private Double weight;
+    private Set<Edge> edges;
 
     @Override
     public boolean equals(Object o) {

@@ -5,9 +5,13 @@ public class MainClass {
         MyGraph myGraph = new MyGraph();
         myGraph.produceGraph();
         System.out.println("The current graph:" + myGraph);
+        System.out.println();
+        System.out.println("InDegree Of Nodes:" + myGraph.inDegreePrint());
+        System.out.println();
+        System.out.println("OutDegree Of Nodes:" + myGraph.outDegreePrint());
+        System.out.println();
 
-        System.out.println("InDegree Of Nodes:" + myGraph.inDegree());
-        System.out.println("OutDegree Of Nodes:" + myGraph.outDegree());
-//        myGraph.getGraphPath();
+
+        myGraph.getGraphPath();
     }
 }
