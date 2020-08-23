@@ -15,7 +15,7 @@ public class MyGraph {
         // get Random Number vertex between 4 and 13
         int vertex = getRandomVertex();
 
-        vertex = 15;
+//        vertex = 10;
         // add CloudLet to graph
         for (int i = 1; i <= vertex; i++) {
             add(i);
@@ -26,41 +26,55 @@ public class MyGraph {
             setRandomEdge(cloudLet, getRandomEdge());
         }
 
-        inDegree();
-        outDegree();
         System.out.println();
     }
 
-    /*public void getGraphPath() {
+    public void getGraphPath() {
         List<CloudLet> startNode = inDegree().keySet().stream().filter(f -> inDegree().get(f) == 0).collect(Collectors.toList());
         if (startNode.size() != 1)
             throw new RuntimeException("Start Node must be once in a graph");
-        System.out.println("Start CloudLet is :" + startNode.stream().findFirst().get());
+        CloudLet cloudLet = startNode.stream().findFirst().get();
+        System.out.println("Start CloudLet is: " + cloudLet.getName());
 
         List<CloudLet> endNodes = outDegree().keySet().stream().filter(f -> outDegree().get(f) == 0).collect(Collectors.toList());
         if (endNodes.size() != 1)
             throw new RuntimeException("End Node must be once in a graph");
-        System.out.println("End CloudLet is :" + endNodes.stream().findFirst().get());
-    }*/
+        CloudLet cloudLet1 = endNodes.stream().findFirst().get();
+        System.out.println("End CloudLet is: " + cloudLet1.getName());
+    }
+
 
     // درجه وردی هر نود
-    public Map<CloudLet, Integer> inDegree() {
-        Map<CloudLet, Integer> result = new HashMap<>();
+    private Map<CloudLet, Integer> inDegree() {
+        Map<CloudLet, Integer> result = new TreeMap<>();
         for (CloudLet i : neighbors)
             result.put(i, 0);
         for (CloudLet nodes : neighbors) {
-            for (CloudLet c : nodes.getDestination()) {
-                result.put(c, result.get(c) + 1);
+            for (Edge c : nodes.getEdges()) {
+                result.put(c.getDestination(), result.get(c.getDestination()) + 1);
             }
         }
         return result;
     }
 
+    // درجه وردی هر نود
+    private Integer inDegree(int index) {
+        Integer value = 0;
+        for (CloudLet nodes : neighbors) {
+            for (Edge c : nodes.getEdges()) {
+                if (c.getDestination().getIndex() == index) {
+                    value++;
+                }
+            }
+        }
+        return value;
+    }
+
     // درجه خروحی هر نود
-    public Map<CloudLet, Integer> outDegree() {
-        Map<CloudLet, Integer> outDegree = new HashMap<>();
+    private Map<CloudLet, Integer> outDegree() {
+        Map<CloudLet, Integer> outDegree = new TreeMap<>();
         for (CloudLet i : neighbors) {
-            outDegree.put(i, i.getDestination().size());
+            outDegree.put(i, i.getEdges().size());
         }
         return outDegree;
     }
@@ -69,8 +83,6 @@ public class MyGraph {
     private void setRandomEdge(CloudLet cloudLet, int edgRandomNumber) {
 
         Set<CloudLet> edges = new TreeSet<>();
-
-//        Edge edge = new Edge();
 
         Integer index = cloudLet.getIndex();
 
@@ -98,23 +110,25 @@ public class MyGraph {
             }
 
             // اضافه کردن یال ها به نود در حال پیمایش
-            setEdg(cloudLet, edges);
+            edges.forEach(m -> setEdg(cloudLet, m));
         }
         // اگر یال یکی مونده به اخر بود به یال اهر وصل شود
         else if (index == neighbors.size() - 1) {
-            edges.addAll(neighbors
-                    .stream()
-                    .filter(f -> f.getIndex().equals(neighbors.size()))
-                    .collect(Collectors.toSet()));
-
             // اضافه کردن نود یکی مونده به اخر به نود اخر
-            setEdg(cloudLet, edges);
+            setEdg(cloudLet, neighbors.stream().filter(f -> f.getIndex().equals(neighbors.size())).findFirst().orElseThrow(RuntimeException::new));
+        }
+
+        // به غیر از نود اول تمام نود ها باید ورودی داشته باشند اکر نودی ورودی نداشته باشد باید به نود قبل از خودش وصل شود
+        if (index != 1) {
+            if (inDegree(index) == 0) {
+                setEdg(neighbors.stream().filter(f -> f.getIndex() == index - 1).findFirst().orElseThrow(RuntimeException::new), cloudLet);
+            }
         }
     }
 
     // اضافه کردن یال به نود
-    private void setEdg(CloudLet from, Set<CloudLet> to) {
-        from.setDestination(to);
+    private void setEdg(CloudLet from, CloudLet to) {
+        from.getEdges().add(new Edge(to, StdRandom.pareto()));
     }
 
     // اضافه کردن نود ها به گراف
@@ -122,9 +136,9 @@ public class MyGraph {
         // Create CloudLet
         CloudLet cloudLet = new CloudLet();
         cloudLet.setIndex(vertex);
-        cloudLet.setName("CloudLet - " + vertex);
+        cloudLet.setName("CloudLet_" + vertex);
         cloudLet.setWeight(StdRandom.pareto());
-        cloudLet.setDestination(new HashSet<>());
+        cloudLet.setEdges(new HashSet<>());
 
         // if cloudLet has in graph return else add to graph
         if (neighbors.contains(cloudLet)) return;
@@ -149,11 +163,33 @@ public class MyGraph {
         StringBuilder s = new StringBuilder();
         for (CloudLet v : neighbors) {
             List<Integer> edges = new ArrayList<>();
-            for (CloudLet i : v.getDestination()) {
-                edges.add(i.getIndex());
+            for (Edge i : v.getEdges()) {
+                edges.add(i.getDestination().getIndex());
             }
             s.append("\n").append(v.getIndex()).append(" -> ").append(edges);
         }
         return s.toString();
+    }
+
+    public String inDegreePrint() {
+        Map<CloudLet, Integer> result = inDegree();
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("{");
+        for (CloudLet i : result.keySet()) {
+            stringBuilder.append("Node:").append(i.getIndex()).append("=").append(result.get(i).toString()).append(", ");
+        }
+        return stringBuilder.append("}").toString();
+    }
+
+    public String outDegreePrint() {
+        Map<CloudLet, Integer> result = outDegree();
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("{");
+
+        for (CloudLet i : result.keySet())
+            stringBuilder.append("Node:").append(i.getIndex()).append("=").append(result.get(i).toString()).append(", ");
+
+        stringBuilder.append("}");
+        return stringBuilder.toString();
     }
 }
