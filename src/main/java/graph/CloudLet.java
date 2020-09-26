@@ -1,19 +1,23 @@
 package graph;
 
 import lombok.*;
+import org.cloudbus.cloudsim.Cloudlet;
+import org.cloudbus.cloudsim.UtilizationModel;
 
 import java.util.Set;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
-public class CloudLet implements Comparable<CloudLet> {
+public class CloudLet extends Cloudlet implements Comparable<CloudLet>  {
     private Integer index;
     private String name;
     private Double weight;
     private Set<Edge> edges;
+
+    public CloudLet(int cloudletId, long cloudletLength, int pesNumber, long cloudletFileSize, long cloudletOutputSize, UtilizationModel utilizationModelCpu, UtilizationModel utilizationModelRam, UtilizationModel utilizationModelBw) {
+        super(cloudletId, cloudletLength, pesNumber, cloudletFileSize, cloudletOutputSize, utilizationModelCpu, utilizationModelRam, utilizationModelBw);
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -1,6 +1,8 @@
 package graph;
 
 import distribution.StdRandom;
+import org.cloudbus.cloudsim.UtilizationModel;
+import org.cloudbus.cloudsim.UtilizationModelFull;
 
 import java.util.*;
 import java.util.stream.Collector;
@@ -11,7 +13,7 @@ public class MyGraph {
     // Used Tree Map For Sort By Index
     private Set<CloudLet> neighbors = new TreeSet<>();
 
-    public void produceGraph() {
+    public List<CloudLet> produceGraph() {
         // get Random Number vertex between 4 and 13
         int vertex = getRandomVertex();
 
@@ -26,7 +28,7 @@ public class MyGraph {
             setRandomEdge(cloudLet, getRandomEdge());
         }
 
-        System.out.println();
+        return new ArrayList<>(neighbors);
     }
 
     public void getGraphPath() {
@@ -134,7 +136,8 @@ public class MyGraph {
     // اضافه کردن نود ها به گراف
     private void add(int vertex) {
         // Create CloudLet
-        CloudLet cloudLet = new CloudLet();
+        UtilizationModel utilizationModel = new UtilizationModelFull();
+        CloudLet cloudLet = new CloudLet(vertex,400000,1,300,300,utilizationModel,utilizationModel,utilizationModel);
         cloudLet.setIndex(vertex);
         cloudLet.setName("CloudLet_" + vertex);
         cloudLet.setWeight(StdRandom.pareto());
