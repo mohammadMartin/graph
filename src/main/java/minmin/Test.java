@@ -1,5 +1,7 @@
 package minmin;
 
+import graph.CloudLet;
+import graph.MyGraph;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
@@ -13,8 +15,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Test {
-    private static List<MyCloudlet> cloudletList;
-    private static List<Myvm> vmlist;
+    private static List<CloudLet> cloudletList = new ArrayList<>();
+    private static List<Myvm> vmlist = new ArrayList<>();
 
     public Test() {
     }
@@ -30,7 +32,6 @@ public class Test {
             Datacenter datacenter0 = createDatacenter("Datacenter_0");
             MyDataCenterBroker broker = createBroker();
             int brokerId = broker.getId();
-            vmlist = new ArrayList();
             int vmid = 0;
             long size = 10000L;
             int ram = 2048;
@@ -48,32 +49,9 @@ public class Test {
             vmlist.add(vm1);
             vmlist.add(vm2);
             broker.submitVmList(vmlist);
-            cloudletList = new ArrayList();
-            int id = 0;
-            long fileSize = 300L;
-            long outputSize = 300L;
-            UtilizationModel utilizationModel = new UtilizationModelFull();
-            MyCloudlet cloudlet1 = new MyCloudlet(id, 500L, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
-            cloudlet1.setUserId(brokerId);
-            id = id + 1;
-            MyCloudlet cloudlet2 = new MyCloudlet(id, 1000L, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
-            cloudlet2.setUserId(brokerId);
-            ++id;
-            MyCloudlet cloudlet3 = new MyCloudlet(id, 1000L, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
-            cloudlet3.setUserId(brokerId);
-            ++id;
-            MyCloudlet cloudlet4 = new MyCloudlet(id, 400L, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
-            cloudlet4.setUserId(brokerId);
-            ++id;
-            MyCloudlet cloudlet5 = new MyCloudlet(id, 100L, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
-            cloudlet5.setUserId(brokerId);
-            ++id;
-            MyCloudlet cloudlet6 = new MyCloudlet(id, 1500L, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
-            cloudlet6.setUserId(brokerId);
-            cloudletList.add(cloudlet1);
-            cloudletList.add(cloudlet2);
-            cloudletList.add(cloudlet3);
-            cloudletList.add(cloudlet4);
+            MyGraph myGraph = new MyGraph();
+            List<CloudLet> cloudLets = myGraph.produceGraph();
+            cloudletList.addAll(cloudLets);
             broker.submitCloudletList(cloudletList);
             CloudSim.startSimulation();
             List<Cloudlet> newList = broker.getCloudletReceivedList();

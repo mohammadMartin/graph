@@ -15,6 +15,8 @@ public class CloudLet extends Cloudlet implements Comparable<CloudLet>  {
     private Double weight;
     private Set<Edge> edges;
 
+    public int select_task = 0;
+
     public CloudLet(int cloudletId, long cloudletLength, int pesNumber, long cloudletFileSize, long cloudletOutputSize, UtilizationModel utilizationModelCpu, UtilizationModel utilizationModelRam, UtilizationModel utilizationModelBw) {
         super(cloudletId, cloudletLength, pesNumber, cloudletFileSize, cloudletOutputSize, utilizationModelCpu, utilizationModelRam, utilizationModelBw);
     }
