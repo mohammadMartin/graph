@@ -14,6 +14,37 @@
             <artifactId>lombok</artifactId>
             <version>1.18.12</version>
         </dependency>
+        <dependency>
+            <groupId>javax.sql</groupId>
+            <artifactId>cloudsim-examples-4.0-sources</artifactId>
+            <version>2.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/cloudsim-examples-4.0-sources.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.sql</groupId>
+            <artifactId>cloudsim-examples-4.0.jar</artifactId>
+            <version>2.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/cloudsim-examples-4.0.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.sql</groupId>
+            <artifactId>cloudsim-4.0-sources.jar</artifactId>
+            <version>2.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/cloudsim-4.0-sources.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.sql</groupId>
+            <artifactId>cloudsim-4.0.jar</artifactId>
+            <version>2.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/cloudsim-4.0.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <build>
