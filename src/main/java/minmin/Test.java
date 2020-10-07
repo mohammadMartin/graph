@@ -51,9 +51,15 @@ public class Test {
             broker.submitVmList(vmlist);
             MyGraph myGraph = new MyGraph();
             List<CloudLet> cloudLets = myGraph.produceGraph();
-            cloudLets.forEach(f->{
+            cloudLets.forEach(f -> {
                 f.setUserId(brokerId);
-                f.setVmId(vmlist.get(0).getId());
+                int vId = 0;
+                if (f.getIndex() % 2 == 0) {
+                    vmlist.stream().filter(f1 -> f1.getId() % 2 == 0).findFirst().get().getId();
+                } else {
+                    vId = vmlist.stream().filter(f1 -> f1.getId() % 2 != 0).findFirst().get().getId();
+                }
+                f.setVmId(vId);
             });
             cloudletList.addAll(cloudLets);
             broker.submitCloudletList(cloudletList);
