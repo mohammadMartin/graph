@@ -1,5 +1,6 @@
 package minmin;
 
+import graph.CloudLet;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.DatacenterBroker;
 import org.cloudbus.cloudsim.Log;
@@ -22,8 +23,8 @@ public class MyDataCenterBroker extends DatacenterBroker {
         return (List<Myvm>) this.vmsCreatedList;
     }
 
-    public List<MyCloudlet> getCloudletList() {
-        return (List<MyCloudlet>) this.cloudletList;
+    public List<CloudLet> getCloudletList() {
+        return (List<CloudLet>) this.cloudletList;
     }
 
     protected void submitCloudlets() {
@@ -38,7 +39,7 @@ public class MyDataCenterBroker extends DatacenterBroker {
 
         while (true) {
             while (var2.hasNext()) {
-                MyCloudlet cloudlet = (MyCloudlet) var2.next();
+                CloudLet cloudlet = (CloudLet) var2.next();
                 Myvm vm;
                 if (cloudlet.getVmId() == -1) {
                     vm = (Myvm) this.getVmsCreatedList().get(vmIndex);
@@ -114,7 +115,7 @@ public class MyDataCenterBroker extends DatacenterBroker {
         double min_completiontimeoftask = 90.0D;
 
         for (i = 0; i < this.cloudletList.size(); ++i) {
-            if (((MyCloudlet) this.getCloudletList().get(i)).select_task == 0 && ((double[]) temp.get(i))[1] < min_completiontimeoftask) {
+            if (((CloudLet) this.getCloudletList().get(i)).select_task == 0 && ((double[]) temp.get(i))[1] < min_completiontimeoftask) {
                 min_completiontimeoftask = ((double[]) temp.get(i))[1];
                 vm_index = (int) ((double[]) temp.get(i))[0];
                 task_index = i;
@@ -124,7 +125,7 @@ public class MyDataCenterBroker extends DatacenterBroker {
 
         Myvm vm = (Myvm) this.getVmsCreatedList().get(vm_index);
         min_completiontime = (double) ((Cloudlet) this.cloudletList.get(task_index)).getCloudletLength() / vm.getHost().getTotalAllocatedMipsForVm(vm);
-        ((MyCloudlet) this.getCloudletList().get(task_index)).select_task = 1;
+        ((CloudLet) this.getCloudletList().get(task_index)).select_task = 1;
         vm.setwatingtime(min_completiontime);
         ++this.step;
         Log.printLine("=================minmin_algorithm=================");

@@ -1,6 +1,7 @@
 package graph;
 
 import lombok.*;
+import minmin.MyCloudlet;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.UtilizationModel;
 
@@ -9,7 +10,7 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
-public class CloudLet extends Cloudlet implements Comparable<CloudLet>  {
+public class CloudLet extends Cloudlet implements Comparable<CloudLet> {
     private Integer index;
     private String name;
     private Double weight;

@@ -2,7 +2,7 @@ package graph;
 
 
 import distribution.StdRandom;
-import org.cloudbus.cloudsimminmin.UtilizationModel;
+import org.cloudbus.cloudsim.UtilizationModel;
 import org.cloudbus.cloudsim.UtilizationModelFull;
 
 import java.util.*;

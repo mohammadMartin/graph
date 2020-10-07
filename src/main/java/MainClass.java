@@ -1,4 +1,5 @@
 import graph.MyGraph;
+import minmin.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +16,7 @@ public class MainClass {
         System.out.println();
 
 
-
+        Test.main(args);
 
         myGraph.getGraphPath();
     }

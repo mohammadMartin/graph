@@ -51,6 +51,10 @@ public class Test {
             broker.submitVmList(vmlist);
             MyGraph myGraph = new MyGraph();
             List<CloudLet> cloudLets = myGraph.produceGraph();
+            cloudLets.forEach(f->{
+                f.setUserId(brokerId);
+                f.setVmId(vmlist.get(0).getId());
+            });
             cloudletList.addAll(cloudLets);
             broker.submitCloudletList(cloudletList);
             CloudSim.startSimulation();
