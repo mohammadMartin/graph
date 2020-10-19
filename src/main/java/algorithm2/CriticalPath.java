@@ -5,10 +5,7 @@ import graph.Edge;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
@@ -25,14 +22,26 @@ public class CriticalPath {
 
         while (!Vr.equals(startNode)) {
 
-            List<CloudLet> outDegree = Vr.getEdges().stream().map(Edge::getDestination).collect(Collectors.toList());
-            CloudLet maxCloudLet = outDegree.stream().max(Comparator.comparing(CloudLet::getLFT)).orElseThrow(RuntimeException::new);
-            CP.add(maxCloudLet);
+            List<CloudLet> inDegreeNodes = new ArrayList<>();
+
+            for (CloudLet c : current) {
+                for (Edge ed : c.getEdges()) {
+                    if (ed.getDestination().getIndex().equals(Vr.getIndex())) {
+                        inDegreeNodes.add(c);
+                    }
+                }
+            }
+
+            CloudLet maxLFTNode = inDegreeNodes.stream().max(Comparator.comparing(CloudLet::getLFT)).orElse(null);
+
+            Vr = maxLFTNode;
+
+
+            System.out.println();
         }
 
 
     }
-
 
     private CloudLet calculateLFT(CloudLet cloudLet) {
         cloudLet.setLFT(new Random().nextDouble());
