@@ -1,4 +1,8 @@
 import graph.MyGraph;
+import minmin.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainClass {
     public static void main(String[] args) {
@@ -11,6 +15,8 @@ public class MainClass {
         System.out.println("OutDegree Of Nodes:" + myGraph.outDegreePrint());
         System.out.println();
 
+
+        Test.main(args);
 
         myGraph.getGraphPath();
     }
