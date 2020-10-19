@@ -32,17 +32,25 @@ public class MyGraph {
     }
 
     public void getGraphPath() {
+        CloudLet startNode = getStartNode();
+        System.out.println("Start CloudLet is: " + startNode.getName());
+
+        CloudLet endNode = getEndNode();
+        System.out.println("End CloudLet is: " + endNode.getName());
+    }
+
+    public CloudLet getStartNode() {
         List<CloudLet> startNode = inDegree().keySet().stream().filter(f -> inDegree().get(f) == 0).collect(Collectors.toList());
         if (startNode.size() != 1)
             throw new RuntimeException("Start Node must be once in a graph");
-        CloudLet cloudLet = startNode.stream().findFirst().get();
-        System.out.println("Start CloudLet is: " + cloudLet.getName());
+        return startNode.stream().findFirst().get();
+    }
 
+    public CloudLet getEndNode() {
         List<CloudLet> endNodes = outDegree().keySet().stream().filter(f -> outDegree().get(f) == 0).collect(Collectors.toList());
         if (endNodes.size() != 1)
             throw new RuntimeException("End Node must be once in a graph");
-        CloudLet cloudLet1 = endNodes.stream().findFirst().get();
-        System.out.println("End CloudLet is: " + cloudLet1.getName());
+        return endNodes.stream().findFirst().get();
     }
 
 
