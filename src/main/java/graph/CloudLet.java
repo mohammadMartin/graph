@@ -19,23 +19,7 @@ public class CloudLet extends Cloudlet implements Comparable<CloudLet> {
     private MARK mark;
 
     public enum MARK {
-        YES((byte) 1, "دارد"),
-        NO((byte) 2, "ندارد");
-        private Byte value;
-        private String title;
-
-        MARK(Byte value, String title) {
-            this.value = value;
-            this.title = title;
-        }
-
-        public Byte getValue() {
-            return value;
-        }
-
-        public String getTitle() {
-            return title;
-        }
+        YES, NO
     }
 
     //---------------------------------------------------------------
