@@ -16,6 +16,27 @@ public class CloudLet extends Cloudlet implements Comparable<CloudLet> {
     private Double weight;
     private Set<Edge> edges;
     private Double LFT;
+    private MARK mark;
+
+    public enum MARK {
+        YES((byte) 1, "دارد"),
+        NO((byte) 2, "ندارد");
+        private Byte value;
+        private String title;
+
+        MARK(Byte value, String title) {
+            this.value = value;
+            this.title = title;
+        }
+
+        public Byte getValue() {
+            return value;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+    }
 
     //---------------------------------------------------------------
     public int select_task = 0;//this value for minmin and must delete
