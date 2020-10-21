@@ -24,10 +24,13 @@ public class CriticalPath {
 
         // آخرین نود
         CloudLet Vr = endNode;
+
         CP.add(Vr);
 
         // تا زمانی که آخرین نود به نود اول نرسد
-        while (!Vr.equals(startNode)) {
+        while (!Vr.equals(startNode) && current.stream()
+                .filter(f -> !f.getIndex().equals(startNode.getIndex()) && !f.getIndex().equals(endNode.getIndex()))
+                .anyMatch(n -> n.getMark() == CloudLet.MARK.NO)) {
 
             // لیست تمام نودهایی که به نود ما وارد می شود
             CloudLet VrPrim = Vr;
@@ -35,14 +38,32 @@ public class CriticalPath {
             // بعد چرخش تمام نودها تمام یال هایی که آن نود دارد را محاسبه می کنیم اگر به آن نود آخر وارد شده بود به عنوان درجه ورودی آن نود محسوب میشود
             List<CloudLet> inDegreeNodes = current.stream()
                     .filter(f -> f.getEdges().stream().anyMatch(f1 -> f1.getDestination().getIndex().equals(VrPrim.getIndex())))
+                    .filter(f -> !f.getIndex().equals(startNode.getIndex()))
                     .collect(Collectors.toList());
 
+            CloudLet Vs;
             // درجه ورودی هر نود را کسانی که درحه LFT بیشتری دارند به لیست اضافه می شودند
-            CloudLet Vs = inDegreeNodes.stream().max(Comparator.comparing(CloudLet::getLFT)).orElseThrow(NoSuchElementException::new);
+            if (inDegreeNodes.size() > 1) {
+                Vs = inDegreeNodes
+                        .stream()
+                        .filter(f -> f.getMark() == CloudLet.MARK.NO)
+                        .max(Comparator.comparing(CloudLet::getLFT))
+                        .orElseThrow(NoSuchElementException::new);
+
+            } else if (inDegreeNodes.size() == 1) {
+                Vs = inDegreeNodes
+                        .stream()
+                        .findFirst()
+                        .get();
+            } else {
+                Vs = startNode;
+            }
+
 
             // آنهایی که انتخاب شده اند به عنوان نود بهرانی مارک yes میخوردند
+            CloudLet finalVs = Vs;
             current.stream()
-                    .filter(f -> f.getIndex().equals(Vs.getIndex()) && !f.getIndex().equals(startNode.getIndex()) && !f.getIndex().equals(endNode.getIndex()))
+                    .filter(f -> f.getIndex().equals(finalVs.getIndex()) && !f.getIndex().equals(startNode.getIndex()) && !f.getIndex().equals(endNode.getIndex()))
                     .forEach(m -> m.setMark(CloudLet.MARK.YES));
 
             //اضافه کردن به CP
@@ -50,22 +71,15 @@ public class CriticalPath {
 
             Vr = Vs;
 
-            System.out.println();
+            if (Vr.equals(startNode)) {
+                totalCP.add(CP);
+                CP = new ArrayList<>();
+                Vr = endNode;
+            }
         }
 
+        CP.add(startNode);
         totalCP.add(CP);
-
-        List<CloudLet> newCurrent = current.stream()
-                .filter(f -> f.getMark() == CloudLet.MARK.NO)
-                .collect(Collectors.toList());
-
-        CloudLet stNode = newCurrent.stream().filter(f -> f.getIndex().equals(startNode.getIndex())).findFirst().orElseThrow(RuntimeException::new);
-        CloudLet enNode = newCurrent.stream().filter(f -> f.getIndex().equals(endNode.getIndex())).findFirst().orElseThrow(RuntimeException::new);
-
-//        while ()
-
-
-
     }
 
     private CloudLet calculateLFT(CloudLet cloudLet) {
