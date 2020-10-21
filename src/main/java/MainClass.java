@@ -26,8 +26,6 @@ public class MainClass {
         criticalPath.calculateCriticalPath(cloudLets, startNode, endNode);
 
 
-        Test.main(args);
-
         myGraph.getGraphPath();
     }
 }
