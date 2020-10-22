@@ -1,31 +1,27 @@
 import algorithm2.CriticalPath;
 import graph.CloudLet;
-import graph.MyGraph;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import minmin.Test;
+import graph.CloudLetGraph;
 
 import java.util.*;
 
 public class MainClass {
     public static void main(String[] args) {
-        MyGraph myGraph = new MyGraph();
-        List<CloudLet> cloudLets = myGraph.produceGraph();
-        System.out.println("The current graph:" + myGraph);
+        CloudLetGraph cloudLetGraph = new CloudLetGraph();
+        List<CloudLet> cloudLets = cloudLetGraph.produceGraph();
+        System.out.println("The current graph:" + cloudLetGraph);
         System.out.println();
-        System.out.println("InDegree Of Nodes:" + myGraph.inDegreePrint());
+        System.out.println("InDegree Of Nodes:" + cloudLetGraph.inDegreePrint());
         System.out.println();
-        System.out.println("OutDegree Of Nodes:" + myGraph.outDegreePrint());
+        System.out.println("OutDegree Of Nodes:" + cloudLetGraph.outDegreePrint());
         System.out.println();
 
-        CloudLet startNode = myGraph.getStartNode();
-        CloudLet endNode = myGraph.getEndNode();
+        CloudLet startNode = cloudLetGraph.getStartNode();
+        CloudLet endNode = cloudLetGraph.getEndNode();
 
         CriticalPath criticalPath = new CriticalPath();
         criticalPath.calculateCriticalPath(cloudLets, startNode, endNode);
 
 
-        myGraph.getGraphPath();
+        cloudLetGraph.getGraphPath();
     }
 }

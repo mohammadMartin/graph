@@ -1,13 +1,14 @@
 package graph;
 
 
+import common.Constant;
 import distribution.StdRandom;
 import org.cloudbus.cloudsim.UtilizationModelFull;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class MyGraph {
+public class CloudLetGraph {
     // Used Tree Map For Sort By Index
     private Set<CloudLet> neighbors = new TreeSet<>();
 
@@ -42,6 +43,7 @@ public class MyGraph {
         cloudLet.setWeight(StdRandom.pareto());
         cloudLet.setEdges(new HashSet<>());
         cloudLet.setMark(CloudLet.MARK.NO);
+        cloudLet.setResourceTypes(Constant.VMInfo.randomType());
 
         // if cloudLet has in graph return else add to graph
         if (neighbors.contains(cloudLet)) return;

@@ -1,7 +1,7 @@
 package minmin;
 
 import graph.CloudLet;
-import graph.MyGraph;
+import graph.CloudLetGraph;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
@@ -49,8 +49,8 @@ public class Test {
             vmlist.add(vm1);
             vmlist.add(vm2);
             broker.submitVmList(vmlist);
-            MyGraph myGraph = new MyGraph();
-            List<CloudLet> cloudLets = myGraph.produceGraph();
+            CloudLetGraph cloudLetGraph = new CloudLetGraph();
+            List<CloudLet> cloudLets = cloudLetGraph.produceGraph();
             cloudLets.forEach(f -> {
                 f.setUserId(brokerId);
                 int vId = 0;

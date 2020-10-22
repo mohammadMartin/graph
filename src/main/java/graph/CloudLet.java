@@ -5,6 +5,7 @@ import minmin.MyCloudlet;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.UtilizationModel;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -17,6 +18,7 @@ public class CloudLet extends Cloudlet implements Comparable<CloudLet> {
     private Set<Edge> edges;
     private Double LFT;
     private MARK mark;
+    private Set<String> resourceTypes;
 
     public enum MARK {
         YES, NO
