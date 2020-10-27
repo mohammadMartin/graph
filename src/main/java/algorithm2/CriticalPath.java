@@ -1,13 +1,11 @@
 package algorithm2;
 
 import graph.CloudLet;
-import graph.Edge;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Getter
 @Setter
@@ -21,6 +19,7 @@ public class CriticalPath {
 
         // New WorkFlow
         List<CloudLet> CP = new ArrayList<>();
+
 
         // آخرین نود
         CloudLet Vr = endNode;

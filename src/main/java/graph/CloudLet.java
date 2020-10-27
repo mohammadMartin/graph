@@ -5,7 +5,10 @@ import minmin.MyCloudlet;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.UtilizationModel;
 
+import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Getter
@@ -19,6 +22,8 @@ public class CloudLet extends Cloudlet implements Comparable<CloudLet> {
     private Double LFT;
     private MARK mark;
     private Set<String> resourceTypes;
+    private Map<MyVm, CloudLetEstimated> estimatedMapOnVm;
+    private Timestamp startTime;
 
     public enum MARK {
         YES, NO

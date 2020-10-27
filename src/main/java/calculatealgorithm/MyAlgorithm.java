@@ -1,20 +1,16 @@
 package calculatealgorithm;
 
-import graph.CloudLet;
-import graph.CloudLetGraph;
-import graph.MyVm;
-import graph.MyVmGraph;
+import graph.*;
+import minmin.Myvm;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
 
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class MyAlgorithm {
 
@@ -28,18 +24,21 @@ public class MyAlgorithm {
 
             CloudSim.init(num_user, calendar, trace_flag);
 
-            createDatacenter("Datacenter_0");
+            createDatacenter("DataCenter_0");
 
             DatacenterBroker broker = createBroker();
             int brokerId = broker.getId();
 
-            MyVmGraph myVmGraph = new MyVmGraph();
-            List<MyVm> vmList = myVmGraph.produceVm(brokerId);
-            broker.submitVmList(vmList);
+            List<MyVm> vms = MyVm.produceVm(brokerId);
+            broker.submitVmList(vms);
 
             CloudLetGraph cloudLetGraph = new CloudLetGraph();
             List<CloudLet> cloudLetList = cloudLetGraph.produceGraph();
             broker.submitCloudletList(cloudLetList);
+
+
+            calculateCloudLetFactorOnVm(vms, cloudLetList);
+
 
 //            broker.bindCloudletToVm(cloudlet1.getCloudletId(), vm1.getId());
 //            broker.bindCloudletToVm(cloudlet2.getCloudletId(), vm2.getId());
@@ -47,7 +46,7 @@ public class MyAlgorithm {
             CloudSim.startSimulation();
             List<Cloudlet> newList = broker.getCloudletReceivedList();
             CloudSim.stopSimulation();
-            printCloudletList(newList);
+            printCloudLetList(newList);
             Log.printLine("CloudSimExample3 finished!");
         } catch (Exception var29) {
             var29.printStackTrace();
@@ -55,6 +54,47 @@ public class MyAlgorithm {
         }
 
     }
+
+    private static void calculateCloudLetFactorOnVm(List<MyVm> vmList, List<CloudLet> cloudLetList) {
+
+        for (CloudLet cl : cloudLetList) {
+
+            Map<MyVm, CloudLetEstimated> estimatedMapOnVm = new HashMap<>();
+
+            for (MyVm vm : vmList) {
+                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+                if (cl.getResourceTypes().contains(vm.getType())) {
+                    CloudLetEstimated cloudLetEstimated = new CloudLetEstimated();
+                    cloudLetEstimated.setEst(calculateEst());
+                    cloudLetEstimated.setEft(calculateEft());
+                    cloudLetEstimated.setCost(calculateCost());
+                    cloudLetEstimated.setEet(calculateEet());
+                    estimatedMapOnVm.put(vm, cloudLetEstimated);
+                }
+
+            }
+
+            cl.setEstimatedMapOnVm(estimatedMapOnVm);
+        }
+    }
+
+    private static Integer calculateEst() {
+        return 1;
+    }
+
+    private static Integer calculateEft() {
+        return 2;
+    }
+
+    private static Integer calculateCost() {
+        return 3;
+    }
+
+    private static Integer calculateEet() {
+        return 4;
+    }
+
 
     private static Datacenter createDatacenter(String name) {
         List<Host> hostList = new ArrayList<>();
@@ -103,7 +143,7 @@ public class MyAlgorithm {
         }
     }
 
-    private static void printCloudletList(List<Cloudlet> list) {
+    private static void printCloudLetList(List<Cloudlet> list) {
         int size = list.size();
         String indent = "    ";
         Log.printLine();

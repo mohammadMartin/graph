@@ -5,6 +5,7 @@ import common.Constant;
 import distribution.StdRandom;
 import org.cloudbus.cloudsim.UtilizationModelFull;
 
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,6 +45,7 @@ public class CloudLetGraph {
         cloudLet.setEdges(new HashSet<>());
         cloudLet.setMark(CloudLet.MARK.NO);
         cloudLet.setResourceTypes(Constant.VMInfo.randomType());
+        cloudLet.setStartTime(new Timestamp(System.currentTimeMillis()));
 
         // if cloudLet has in graph return else add to graph
         if (neighbors.contains(cloudLet)) return;

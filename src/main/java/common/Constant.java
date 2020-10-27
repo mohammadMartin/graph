@@ -15,19 +15,18 @@ public class Constant {
     @Getter
     @AllArgsConstructor
     public enum VMInfo {
-        TYPE_A("A", 250, 1000L, 2048, 1000L, 1, "XEN"),
-        TYPE_B("B", 250, 1000L, 2048, 1000L, 1, "XEN"),
-        TYPE_C("C", 250, 1000L, 2048, 1000L, 1, "XEN"),
-        TYPE_D("D", 250, 1000L, 2048, 1000L, 1, "XEN");
+        TYPE_A("A", 250.0, 1000L, 2048, 1000L, 1, "XEN"),
+        TYPE_B("B", 250.0, 1000L, 2048, 1000L, 1, "XEN"),
+        TYPE_C("C", 250.0, 1000L, 2048, 1000L, 1, "XEN"),
+        TYPE_D("D", 250.0, 1000L, 2048, 1000L, 1, "XEN");
 
         private String type;
-        private Integer mips;
+        private Double mips;
         private Long size;
         private Integer ram;
         private Long bw;
         private Integer pesNumber;
         private String name;
-
 
         public static Set<String> randomType() {
             Constant.VMInfo[] vmInfoValues = Constant.VMInfo.values();
