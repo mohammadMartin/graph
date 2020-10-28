@@ -62,7 +62,6 @@ public class MyAlgorithm {
             Map<MyVm, CloudLetEstimated> estimatedMapOnVm = new HashMap<>();
 
             for (MyVm vm : vmList) {
-                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
                 if (cl.getResourceTypes().contains(vm.getType())) {
                     CloudLetEstimated cloudLetEstimated = new CloudLetEstimated();

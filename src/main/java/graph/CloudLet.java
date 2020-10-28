@@ -23,7 +23,6 @@ public class CloudLet extends Cloudlet implements Comparable<CloudLet> {
     private MARK mark;
     private Set<String> resourceTypes;
     private Map<MyVm, CloudLetEstimated> estimatedMapOnVm;
-    private Timestamp startTime;
 
     public enum MARK {
         YES, NO

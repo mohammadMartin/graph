@@ -45,7 +45,6 @@ public class CloudLetGraph {
         cloudLet.setEdges(new HashSet<>());
         cloudLet.setMark(CloudLet.MARK.NO);
         cloudLet.setResourceTypes(Constant.VMInfo.randomType());
-        cloudLet.setStartTime(new Timestamp(System.currentTimeMillis()));
 
         // if cloudLet has in graph return else add to graph
         if (neighbors.contains(cloudLet)) return;
