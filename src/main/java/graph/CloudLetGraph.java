@@ -5,7 +5,6 @@ import common.Constant;
 import distribution.StdRandom;
 import org.cloudbus.cloudsim.UtilizationModelFull;
 
-import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
