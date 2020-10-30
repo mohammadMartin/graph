@@ -1,16 +1,20 @@
 package calculatealgorithm;
 
-import graph.*;
-import minmin.Myvm;
+import graph.CloudLet;
+import graph.CloudLetGraph;
+import graph.MyVm;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
+import scheduling_01.Scheduling_01;
 
-import java.sql.Timestamp;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;
 
 public class MyAlgorithm {
 
@@ -36,8 +40,8 @@ public class MyAlgorithm {
             List<CloudLet> cloudLetList = cloudLetGraph.produceGraph();
             broker.submitCloudletList(cloudLetList);
 
-
-            calculateCloudLetFactorOnVm(vms, cloudLetList);
+            Scheduling_01 scheduling_01 = new Scheduling_01();
+            scheduling_01.calculateSchedulingOne(vms, cloudLetList);
 
 
 //            broker.bindCloudletToVm(cloudlet1.getCloudletId(), vm1.getId());
@@ -54,47 +58,6 @@ public class MyAlgorithm {
         }
 
     }
-
-    private static void calculateCloudLetFactorOnVm(List<MyVm> vmList, List<CloudLet> cloudLetList) {
-
-        for (CloudLet cl : cloudLetList) {
-
-            Map<MyVm, CloudLetEstimated> estimatedMapOnVm = new HashMap<>();
-
-            for (MyVm vm : vmList) {
-                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-
-                if (cl.getResourceTypes().contains(vm.getType())) {
-                    CloudLetEstimated cloudLetEstimated = new CloudLetEstimated();
-                    cloudLetEstimated.setEst(calculateEst());
-                    cloudLetEstimated.setEft(calculateEft());
-                    cloudLetEstimated.setCost(calculateCost());
-                    cloudLetEstimated.setEet(calculateEet());
-                    estimatedMapOnVm.put(vm, cloudLetEstimated);
-                }
-
-            }
-
-            cl.setEstimatedMapOnVm(estimatedMapOnVm);
-        }
-    }
-
-    private static Integer calculateEst() {
-        return 1;
-    }
-
-    private static Integer calculateEft() {
-        return 2;
-    }
-
-    private static Integer calculateCost() {
-        return 3;
-    }
-
-    private static Integer calculateEet() {
-        return 4;
-    }
-
 
     private static Datacenter createDatacenter(String name) {
         List<Host> hostList = new ArrayList<>();

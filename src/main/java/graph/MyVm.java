@@ -8,42 +8,39 @@ import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
 import org.cloudbus.cloudsim.Vm;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
 public class MyVm extends Vm {
 
-    private Byte label;
-    private String type;
-    private Double workLoad;
+    private Constant.VmCluster cluster;
+    private Double workLoad = 0.0;
 
     public MyVm(int id, int userId, double mips, int numberOfPes, int ram, long bw, long size, String vmm, CloudletScheduler cloudletScheduler) {
         super(id, userId, mips, numberOfPes, ram, bw, size, vmm, cloudletScheduler);
     }
 
-    // create 9 Vms have 4 type
+    // create 6 Vms and two cluster every cluster have 3 type
     public static List<MyVm> produceVm(Integer brokerId) {
+        final int[] i = {0};
+
         List<MyVm> vms = new ArrayList<>();
 
-        for (int i = 0; i < 8; i++) {
-            if (i < 2) {
-                vms.add(createVm(i, brokerId, Constant.VMInfo.TYPE_A));
-            } else if (i < 4) {
-                vms.add(createVm(i, brokerId, Constant.VMInfo.TYPE_B));
-            } else if (i < 6) {
-                vms.add(createVm(i, brokerId, Constant.VMInfo.TYPE_C));
-            } else {
-                vms.add(createVm(i, brokerId, Constant.VMInfo.TYPE_D));
-            }
-        }
+        Arrays.stream(Constant.VMInfo.values())
+                .forEach(f -> {
+                    vms.add(createVm(i[0], brokerId, f, Constant.VmCluster.CLUSTER_1));
+                    i[0] += 1;
+                    vms.add(createVm(i[0], brokerId, f, Constant.VmCluster.CLUSTER_2));
+                    i[0] += 1;
+                });
 
         return vms;
     }
 
-    private static MyVm createVm(Integer vmid, Integer brokerId, Constant.VMInfo vmInfo) {
+    private static MyVm createVm(Integer vmid, Integer brokerId, Constant.VMInfo vmInfo, Constant.VmCluster vmCluster) {
 
         MyVm myVm = new MyVm(vmid,
                 brokerId,
@@ -55,14 +52,8 @@ public class MyVm extends Vm {
                 vmInfo.getName(),
                 new CloudletSchedulerTimeShared());
 
-        // every vm have a type for work on a special subject
-        myVm.setType(vmInfo.getType());
-
-        // every vm have work load for test that define how many work are in the vm
-        myVm.setWorkLoad(ThreadLocalRandom.current().nextDouble(100));
-
-        // every vm have label for clustering
-        myVm.setLabel(vmid % 2 == 0 ? Constant.VmLabel.LABEL_1.getValue() : Constant.VmLabel.LABEL_2.getValue());
+        // every vm have cluster for clustering
+        myVm.setCluster(vmCluster);
 
         return myVm;
     }

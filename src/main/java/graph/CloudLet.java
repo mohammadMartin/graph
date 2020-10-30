@@ -1,13 +1,13 @@
 package graph;
 
-import lombok.*;
-import minmin.MyCloudlet;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.UtilizationModel;
 
 import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.List;
+import java.time.Duration;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,20 +21,16 @@ public class CloudLet extends Cloudlet implements Comparable<CloudLet> {
     private Set<Edge> edges;
     private Double LFT;
     private MARK mark;
-    private Set<String> resourceTypes;
+    private String resourceName;
+    private Duration ET;
     private Map<MyVm, CloudLetEstimated> estimatedMapOnVm;
-    private Timestamp startTime;
 
     public enum MARK {
         YES, NO
     }
 
-    //---------------------------------------------------------------
-    public int select_task = 0;//this value for minmin and must delete
-    //---------------------------------------------------------------
-
-    public CloudLet(int cloudletId, long cloudletLength, int pesNumber, long cloudletFileSize, long cloudletOutputSize, UtilizationModel utilizationModelCpu, UtilizationModel utilizationModelRam, UtilizationModel utilizationModelBw) {
-        super(cloudletId, cloudletLength, pesNumber, cloudletFileSize, cloudletOutputSize, utilizationModelCpu, utilizationModelRam, utilizationModelBw);
+    public CloudLet(int cloudLetId, long cloudLetLength, int pesNumber, long cloudLetFileSize, long cloudLetOutputSize, UtilizationModel utilizationModelCpu, UtilizationModel utilizationModelRam, UtilizationModel utilizationModelBw) {
+        super(cloudLetId, cloudLetLength, pesNumber, cloudLetFileSize, cloudLetOutputSize, utilizationModelCpu, utilizationModelRam, utilizationModelBw);
     }
 
     @Override

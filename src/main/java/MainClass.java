@@ -2,11 +2,11 @@ import algorithm2.CriticalPath;
 import graph.CloudLet;
 import graph.CloudLetGraph;
 
-import java.sql.Timestamp;
-import java.util.*;
+import java.util.List;
 
 public class MainClass {
     public static void main(String[] args) {
+
         CloudLetGraph cloudLetGraph = new CloudLetGraph();
         List<CloudLet> cloudLets = cloudLetGraph.produceGraph();
         System.out.println("The current graph:" + cloudLetGraph);
@@ -21,7 +21,6 @@ public class MainClass {
 
         CriticalPath criticalPath = new CriticalPath();
         criticalPath.calculateCriticalPath(cloudLets, startNode, endNode);
-
 
         cloudLetGraph.getGraphPath();
     }
