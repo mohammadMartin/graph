@@ -24,11 +24,10 @@ public class MyAlgorithm {
         try {
             int num_user = 1;
             Calendar calendar = Calendar.getInstance();
-            boolean trace_flag = false;
 
-            CloudSim.init(num_user, calendar, trace_flag);
+            CloudSim.init(num_user, calendar, false);
 
-            createDatacenter("DataCenter_0");
+            createDataCenter();
 
             DatacenterBroker broker = createBroker();
             int brokerId = broker.getId();
@@ -41,7 +40,7 @@ public class MyAlgorithm {
             broker.submitCloudletList(cloudLetList);
 
             Scheduling_01 scheduling_01 = new Scheduling_01();
-            scheduling_01.calculateSchedulingOne(vms, cloudLetList);
+            scheduling_01.calculateSchedulingOne(vms, cloudLetList, cloudLetGraph.getStartNode(),cloudLetGraph.getEndNode());
 
 
 //            broker.bindCloudletToVm(cloudlet1.getCloudletId(), vm1.getId());
@@ -60,7 +59,7 @@ public class MyAlgorithm {
     }
 
 
-    private static Datacenter createDatacenter(String name) {
+    private static void createDataCenter() {
         List<Host> hostList = new ArrayList<>();
         List<Pe> peList = new ArrayList<>();
         int mips = 1000;
@@ -82,43 +81,30 @@ public class MyAlgorithm {
         double costPerMem = 0.05D;
         double costPerStorage = 0.001D;
         double costPerBw = 0.0D;
-        LinkedList<Storage> storageList = new LinkedList();
+        LinkedList<Storage> storageList = new LinkedList<>();
         DatacenterCharacteristics characteristics = new DatacenterCharacteristics(arch, os, vmm, hostList, time_zone, cost, costPerMem, costPerStorage, costPerBw);
-        Datacenter datacenter = null;
 
         try {
-            datacenter = new Datacenter(name, characteristics, new VmAllocationPolicySimple(hostList), storageList, 0.0D);
+            new Datacenter("DataCenter_0", characteristics, new VmAllocationPolicySimple(hostList), storageList, 0.0D);
         } catch (Exception var27) {
             var27.printStackTrace();
         }
-
-        return datacenter;
     }
 
-    private static DatacenterBroker createBroker() {
-        DatacenterBroker broker = null;
-
-        try {
-            broker = new DatacenterBroker("Broker");
-            return broker;
-        } catch (Exception var2) {
-            var2.printStackTrace();
-            return null;
-        }
+    private static DatacenterBroker createBroker() throws Exception {
+        return new DatacenterBroker("Broker");
     }
 
     private static void printCloudLetList(List<Cloudlet> list) {
-        int size = list.size();
         String indent = "    ";
         Log.printLine();
         Log.printLine("========== OUTPUT ==========");
-        Log.printLine("Cloudlet ID" + indent + "STATUS" + indent + "Data center ID" + indent + "VM ID" + indent + "Time" + indent + "Start Time" + indent + "Finish Time");
+        Log.printLine("CloudLet ID" + indent + "STATUS" + indent + "Data center ID" + indent + "VM ID" + indent + "Time" + indent + "Start Time" + indent + "Finish Time");
         DecimalFormat dft = new DecimalFormat("###.##");
 
-        for (int i = 0; i < size; ++i) {
-            Cloudlet cloudlet = (Cloudlet) list.get(i);
+        for (Cloudlet cloudlet : list) {
             Log.print(indent + cloudlet.getCloudletId() + indent + indent);
-            if (cloudlet.getCloudletStatus() == 4) {
+            if (cloudlet.getStatus() == 4) {
                 Log.print("SUCCESS");
                 Log.printLine(indent + indent + cloudlet.getResourceId() + indent + indent + indent + cloudlet.getVmId() + indent + indent + dft.format(cloudlet.getActualCPUTime()) + indent + indent + dft.format(cloudlet.getExecStartTime()) + indent + indent + dft.format(cloudlet.getFinishTime()));
             }
