@@ -2,22 +2,13 @@ package scheduling_01;
 
 import common.Constant;
 import graph.CloudLet;
-import graph.CloudLetEstimated;
-import graph.Edge;
 import graph.MyVm;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-import sun.util.BuddhistCalendar;
 
-import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
@@ -28,47 +19,16 @@ import static java.util.stream.Collectors.groupingBy;
 public class Scheduling_01 {
     public void calculateSchedulingOne(List<MyVm> vms, List<CloudLet> cloudLets, CloudLet startNode, CloudLet endNode) {
 
-        CloudLet stNode = startNode;
-        CloudLet edNode = endNode;
-
-        while (stNode != edNode && startNode.getEdges().isEmpty()) {
-
-            Constant.VmCluster selectedCluster = calculateLessWorkLoadCluster(vms);
-
-            MyVm selectedVm = vms
-                    .stream()
-                    .filter(f -> f.getCluster() == selectedCluster && f.getVmm().equals(stNode.getResourceName()))
-                    .findFirst()
-                    .orElseThrow(RuntimeException::new);
-
-            CloudLetEstimated cloudLetEstimated = new CloudLetEstimated();
-            cloudLetEstimated.setEt(calculateEt(stNode.getCloudletLength(), selectedVm.getMips()));
-            cloudLetEstimated.setEft(calculateEft());
-            cloudLetEstimated.setCost(calculateCost());
-            cloudLetEstimated.setEst(calculateEst());
-
-            Map<MyVm, CloudLetEstimated> estimatedCloudLetMap = new HashMap<>();
-            estimatedCloudLetMap.put(selectedVm, cloudLetEstimated);
-
-            stNode.setEstimatedMapOnVm(estimatedCloudLetMap);
-
-            Set<Edge> edges = stNode.getEdges();
-        }
-
         for (CloudLet c : cloudLets) {
 
-            Constant.VmCluster selectedCluster = calculateLessWorkLoadCluster(vms);
-
             MyVm selectedVm = vms
                     .stream()
-                    .filter(f -> f.getCluster() == selectedCluster)
-                    .filter(f -> f.getVmm().equals(c.getResourceName()))
+                    .filter(f -> f.getCluster() == calculateLessWorkLoadCluster(vms) && f.getVmm().equals(c.getResourceName()))
                     .findFirst()
                     .orElseThrow(RuntimeException::new);
 
-            Duration startTime = Duration.ofSeconds(0);
-
-            calculateEt(c.getCloudletLength(), selectedVm.getMips());
+            Duration ET = calculateEt(c.getCloudletLength(), selectedVm.getMips());
+            Duration EFT = calculateEft(selectedVm, ET);
 
 
         }
@@ -97,11 +57,18 @@ public class Scheduling_01 {
         return Duration.ofSeconds(Math.round(cloudLetLength / mips));
     }
 
-    private static Duration calculateEst() {
-        return Duration.ofSeconds(0);
+    private static Duration calculateEft(MyVm vm, Duration ET) {
+        // به نظرم این میشه تخمین زمان شروع
+        Duration lastNodeDuration = vm
+                .getCloudLetDuration()
+                .lastEntry()
+                .getValue();
+
+        return lastNodeDuration.plusSeconds(ET.getSeconds());
+
     }
 
-    private static Duration calculateEft() {
+    private static Duration calculateEst() {
         return Duration.ofSeconds(0);
     }
 

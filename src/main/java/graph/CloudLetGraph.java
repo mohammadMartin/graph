@@ -45,7 +45,7 @@ public class CloudLetGraph {
         cloudLet.setMark(CloudLet.MARK.NO);
         cloudLet.setResourceName(Constant.VMInfo.randomType());
 
-        // if cloudLet has in graph return else add to graph
+        // if cloudLet has in graph return else add to Graph
         if (neighbors.contains(cloudLet)) return;
 
         // add cloudLet to neighbors

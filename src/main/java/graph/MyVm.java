@@ -7,9 +7,11 @@ import org.cloudbus.cloudsim.CloudletScheduler;
 import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
 import org.cloudbus.cloudsim.Vm;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.TreeMap;
 
 
 @Getter
@@ -18,6 +20,7 @@ public class MyVm extends Vm {
 
     private Constant.VmCluster cluster;
     private Double workLoad = 0.0;
+    private TreeMap<CloudLet, Duration> cloudLetDuration;
 
     public MyVm(int id, int userId, double mips, int numberOfPes, int ram, long bw, long size, String vmm, CloudletScheduler cloudletScheduler) {
         super(id, userId, mips, numberOfPes, ram, bw, size, vmm, cloudletScheduler);
@@ -54,6 +57,10 @@ public class MyVm extends Vm {
 
         // every vm have cluster for clustering
         myVm.setCluster(vmCluster);
+
+        TreeMap<CloudLet, Duration> durationMap = new TreeMap<>();
+        durationMap.put(null, Duration.ZERO);
+        myVm.setCloudLetDuration(durationMap);
 
         return myVm;
     }
