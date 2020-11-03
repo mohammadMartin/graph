@@ -12,4 +12,5 @@ public class CloudLetEstimated {
     private Duration eft;
     private Duration cost;
     private Duration et;
+    private MyVm vm;
 }
