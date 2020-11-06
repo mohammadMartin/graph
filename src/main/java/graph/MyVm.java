@@ -59,7 +59,6 @@ public class MyVm extends Vm {
         myVm.setCluster(vmCluster);
 
         TreeMap<CloudLet, Duration> durationMap = new TreeMap<>();
-        durationMap.put(null, Duration.ZERO);
         myVm.setCloudLetDuration(durationMap);
 
         return myVm;

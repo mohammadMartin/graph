@@ -8,7 +8,6 @@ import java.util.List;
 
 public class MainClass {
     public static void main(String[] args) {
-
         CloudLetGraph cloudLetGraph = new CloudLetGraph();
         List<CloudLet> cloudLets = cloudLetGraph.produceGraph();
         System.out.println("The current graph:" + cloudLetGraph);

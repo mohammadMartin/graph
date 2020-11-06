@@ -40,7 +40,7 @@ public class MyAlgorithm {
             broker.submitCloudletList(cloudLetList);
 
             Scheduling_01 scheduling_01 = new Scheduling_01();
-            scheduling_01.calculateSchedulingOne(vms, cloudLetList, cloudLetGraph.getStartNode(),cloudLetGraph.getEndNode());
+            scheduling_01.calculateSchedulingOne(vms, cloudLetList);
 
 
 //            broker.bindCloudletToVm(cloudlet1.getCloudletId(), vm1.getId());

@@ -31,10 +31,10 @@ public class Scheduling_01 {
                     .orElseThrow(RuntimeException::new);
 
             Duration ET = calculateEt(c.getCloudletLength(), selectedVm.getMips());
-            List<CloudLet> inDegreeOfNode = inDegree(cloudLets, c);
             CloudLetEstimated previousEstimatedCloudLet = maxEstimated(cloudLets, c);
-            calculateEst(previousEstimatedCloudLet.getEft(),c.getCloudletFileSize(),selectedVm.getBw());
-            Duration EFT = calculateEft(selectedVm, ET);
+            Duration cost = calculateCost(c.getCloudletFileSize(), selectedVm.getBw());
+            Duration EST = calculateEst(previousEstimatedCloudLet.getEft(), cost);
+            Duration EFT = calculateEft(EST, ET);
 
 
         }
@@ -50,7 +50,7 @@ public class Scheduling_01 {
                 .collect(groupingBy(MyVm::getCluster, Collectors.summingDouble(MyVm::getWorkLoad)))
                 .entrySet()
                 .stream()
-                .max(comparing(Map.Entry::getKey))
+                .max(comparing(Map.Entry::getValue))
                 .map(Map.Entry::getKey)
                 .get();
     }
@@ -58,27 +58,22 @@ public class Scheduling_01 {
 
     private Duration calculateEt(long cloudLetLength, double mips) {
         if (cloudLetLength == 0 || mips == 0)
-            return Duration.ofSeconds(0);
+            return Duration.ZERO;
         return Duration.ofSeconds(Math.round(cloudLetLength / mips));
     }
 
-    private Duration calculateEft(MyVm vm, Duration ET) {
-        // به نظرم این میشه تخمین زمان شروع
-        Duration lastNodeDuration = vm
-                .getCloudLetDuration()
-                .lastEntry()
-                .getValue();
-
-        return lastNodeDuration.plusSeconds(ET.getSeconds());
-
+    private Duration calculateEft(Duration EST, Duration ET) {
+        return EST.plusSeconds(ET.getSeconds());
     }
 
-    private Duration calculateEst(Duration eft, long cloudLetFileSize, long bw) {
-        cloudLetFileSize/bw
+    private Duration calculateEst(Duration eft, Duration cost) {
+        return eft.plusSeconds(cost.getSeconds());
     }
 
-    private Duration calculateCost() {
-        return Duration.ofSeconds(0);
+    private Duration calculateCost(long cloudLetFileSize, long bw) {
+        if (cloudLetFileSize == 0 || bw == 0)
+            return Duration.ZERO;
+        return Duration.ofSeconds(Math.round(cloudLetFileSize / bw));
     }
 
     private CloudLetEstimated maxEstimated(List<CloudLet> cloudLets, CloudLet node) {

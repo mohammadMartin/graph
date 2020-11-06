@@ -6,8 +6,7 @@ import lombok.ToString;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.UtilizationModel;
 
-import java.time.Duration;
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -21,8 +20,9 @@ public class CloudLet extends Cloudlet implements Comparable<CloudLet> {
     private Double LFT;
     private MARK mark;
     private String resourceName;
-    private Duration ET;
     private CloudLetEstimated cloudLetEstimated;
+    private List<CloudLet> inDegree;
+    private List<CloudLet> outDegree;
 
     public enum MARK {
         YES, NO

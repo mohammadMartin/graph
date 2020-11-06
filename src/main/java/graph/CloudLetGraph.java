@@ -25,6 +25,12 @@ public class CloudLetGraph {
         for (CloudLet cloudLet : neighbors)
             setRandomEdge(cloudLet, getRandomEdge());
 
+        // set InDegree Node Of Vertex
+        neighbors.forEach(f -> {
+            f.setInDegree(inDegreeNode(f.getIndex()));
+            f.setOutDegree(outDegreeNode(f.getIndex()));
+        });
+
         return new ArrayList<>(neighbors);
     }
 
@@ -124,6 +130,12 @@ public class CloudLetGraph {
         return endNodes.stream().findFirst().get();
     }
 
+    public List<CloudLet> inDegreeNode(int index) {
+        return neighbors.stream()
+                .filter(f -> f.getEdges().stream().anyMatch(f1 -> f1.getDestination().getIndex().equals(index)))
+                .collect(Collectors.toList());
+    }
+
 
     // درجه وردی هر نود
     private Map<CloudLet, Integer> inDegree(List<CloudLet> cloudLets) {
@@ -160,6 +172,18 @@ public class CloudLetGraph {
             outDegree.put(i, i.getEdges().size());
 
         return outDegree;
+    }
+
+    private List<CloudLet> outDegreeNode(int index) {
+        List<CloudLet> cloudLets = new ArrayList<>();
+        for (CloudLet c : neighbors) {
+            for (Edge e : c.getEdges()) {
+                if (c.getIndex() == index) {
+                    cloudLets.add(e.getDestination());
+                }
+            }
+        }
+        return cloudLets;
     }
 
     public String inDegreePrint() {
