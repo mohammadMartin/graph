@@ -1,7 +1,6 @@
 import algorithm2.CriticalPath;
 import graph.CloudLet;
 import graph.CloudLetGraph;
-import org.cloudbus.cloudsim.examples.*;
 
 import java.util.List;
 
@@ -10,7 +9,7 @@ public class MainClass {
     public static void main(String[] args) {
         CloudLetGraph cloudLetGraph = new CloudLetGraph();
         List<CloudLet> cloudLets = cloudLetGraph.produceGraph();
-        System.out.println("The current graph:" + cloudLetGraph);
+        System.out.println("The current graph:\n" + cloudLetGraph);
         System.out.println();
         System.out.println("InDegree Of Nodes:" + cloudLetGraph.inDegreePrint());
         System.out.println();

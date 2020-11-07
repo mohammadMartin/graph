@@ -21,8 +21,8 @@ public class CloudLet extends Cloudlet implements Comparable<CloudLet> {
     private MARK mark;
     private String resourceName;
     private CloudLetEstimated cloudLetEstimated;
-    private List<CloudLet> inDegree;
-    private List<CloudLet> outDegree;
+    private Set<CloudLet> inDegree;
+    private Set<Integer> outDegree;
 
     public enum MARK {
         YES, NO

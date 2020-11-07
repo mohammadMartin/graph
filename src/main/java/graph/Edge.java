@@ -9,9 +9,13 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Edge {
+public class Edge implements Comparable<Edge> {
     private CloudLet destination;
     private Double weight;
 
 
+    @Override
+    public int compareTo(Edge o) {
+        return this.getDestination().getIndex() - o.getDestination().getIndex();
+    }
 }

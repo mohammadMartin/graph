@@ -8,6 +8,8 @@ import org.cloudbus.cloudsim.UtilizationModelFull;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
+
 public class CloudLetGraph {
     // Used Tree Map For Sort By Index
     private Set<CloudLet> neighbors = new TreeSet<>();
@@ -26,10 +28,8 @@ public class CloudLetGraph {
             setRandomEdge(cloudLet, getRandomEdge());
 
         // set InDegree Node Of Vertex
-        neighbors.forEach(f -> {
-            f.setInDegree(inDegreeNode(f.getIndex()));
-            f.setOutDegree(outDegreeNode(f.getIndex()));
-        });
+        neighbors.forEach(f -> f.setInDegree(new TreeSet<>(getInDegreeNodeIndex(f.getIndex()))));
+
 
         return new ArrayList<>(neighbors);
     }
@@ -45,11 +45,14 @@ public class CloudLetGraph {
         // Create CloudLet
         CloudLet cloudLet = new CloudLet(vertex, 400000, 1, 300, 300, new UtilizationModelFull(), new UtilizationModelFull(), new UtilizationModelFull());
         cloudLet.setIndex(vertex);
-        cloudLet.setName("CloudLet_" + vertex);
+        cloudLet.setName("CloudLet-" + vertex);
         cloudLet.setWeight(StdRandom.pareto());
-        cloudLet.setEdges(new HashSet<>());
+        cloudLet.setEdges(new TreeSet<>());
         cloudLet.setMark(CloudLet.MARK.NO);
         cloudLet.setResourceName(Constant.VMInfo.randomType());
+        cloudLet.setCloudLetEstimated(new CloudLetEstimated());
+        cloudLet.setInDegree(new TreeSet<>());
+        cloudLet.setOutDegree(new TreeSet<>());
 
         // if cloudLet has in graph return else add to Graph
         if (neighbors.contains(cloudLet)) return;
@@ -99,13 +102,14 @@ public class CloudLetGraph {
             setEdg(cloudLet, neighbors.stream().filter(f -> f.getIndex().equals(neighbors.size())).findFirst().orElseThrow(RuntimeException::new));
 
         // به غیر از نود اول تمام نود ها باید ورودی داشته باشند اکر نودی ورودی نداشته باشد باید به نود قبل از خودش وصل شود
-        if (cloudLetIndex != 1 && inDegree(new ArrayList<>(neighbors), cloudLetIndex) == 0)
+        if (cloudLetIndex != 1 && cloudLet.getInDegree().size() == 0)
             setEdg(neighbors.stream().filter(f -> f.getIndex() == cloudLetIndex - 1).findFirst().orElseThrow(RuntimeException::new), cloudLet);
     }
 
     // اضافه کردن یال به نود
     private void setEdg(CloudLet from, CloudLet to) {
         from.getEdges().add(new Edge(to, StdRandom.pareto()));
+        from.getOutDegree().add(to.getIndex());
     }
 
     public void getGraphPath() {
@@ -117,96 +121,40 @@ public class CloudLetGraph {
     }
 
     public CloudLet getStartNode() {
-        List<CloudLet> startNode = inDegree(new ArrayList<>(neighbors)).keySet().stream().filter(f -> inDegree(new ArrayList<>(neighbors)).get(f) == 0).collect(Collectors.toList());
-        if (startNode.size() != 1)
-            throw new RuntimeException("Start Node must be once in a graph");
-        return startNode.stream().findFirst().get();
+        return neighbors
+                .stream()
+                .filter(f -> f.getInDegree().size() == 0).findFirst()
+                .orElseThrow(NoSuchElementException::new);
     }
 
     public CloudLet getEndNode() {
-        List<CloudLet> endNodes = outDegree(new ArrayList<>(neighbors)).keySet().stream().filter(f -> outDegree(new ArrayList<>(neighbors)).get(f) == 0).collect(Collectors.toList());
-        if (endNodes.size() != 1)
-            throw new RuntimeException("End Node must be once in a graph");
-        return endNodes.stream().findFirst().get();
+        return neighbors
+                .stream()
+                .filter(f -> f.getOutDegree().size() == 0)
+                .findFirst()
+                .orElseThrow(NoSuchElementException::new);
     }
 
-    public List<CloudLet> inDegreeNode(int index) {
-        return neighbors.stream()
+
+    private List<CloudLet> getInDegreeNodeIndex(int index) {
+        return neighbors
+                .stream()
                 .filter(f -> f.getEdges().stream().anyMatch(f1 -> f1.getDestination().getIndex().equals(index)))
-                .collect(Collectors.toList());
-    }
-
-
-    // درجه وردی هر نود
-    private Map<CloudLet, Integer> inDegree(List<CloudLet> cloudLets) {
-        Map<CloudLet, Integer> result = new TreeMap<>();
-        for (CloudLet i : cloudLets)
-            result.put(i, 0);
-
-        for (CloudLet nodes : cloudLets) {
-            for (Edge c : nodes.getEdges()) {
-                result.put(c.getDestination(), result.get(c.getDestination()) + 1);
-            }
-        }
-        return result;
-    }
-
-    // درجه وردی هر نود
-    private Integer inDegree(List<CloudLet> cloudLets, int index) {
-        Integer value = 0;
-        for (CloudLet nodes : cloudLets) {
-            for (Edge c : nodes.getEdges()) {
-                if (c.getDestination().getIndex() == index) {
-                    value++;
-                }
-            }
-        }
-        return value;
-    }
-
-    // درجه خروحی هر نود
-    private Map<CloudLet, Integer> outDegree(List<CloudLet> cloudLets) {
-        Map<CloudLet, Integer> outDegree = new TreeMap<>();
-
-        for (CloudLet i : cloudLets)
-            outDegree.put(i, i.getEdges().size());
-
-        return outDegree;
-    }
-
-    private List<CloudLet> outDegreeNode(int index) {
-        List<CloudLet> cloudLets = new ArrayList<>();
-        for (CloudLet c : neighbors) {
-            for (Edge e : c.getEdges()) {
-                if (c.getIndex() == index) {
-                    cloudLets.add(e.getDestination());
-                }
-            }
-        }
-        return cloudLets;
+                .collect(toList());
     }
 
     public String inDegreePrint() {
-        Map<CloudLet, Integer> result = inDegree(new ArrayList<>(neighbors));
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("{");
-
-        for (CloudLet i : result.keySet())
-            stringBuilder.append("Node:").append(i.getIndex()).append("=").append(result.get(i).toString()).append(", ");
-
+        neighbors.forEach(f -> stringBuilder.append("Node-").append(f.getIndex()).append("=").append(f.getInDegree().size()).append(", "));
         return stringBuilder.append("}").toString();
     }
 
     public String outDegreePrint() {
-        Map<CloudLet, Integer> result = outDegree(new ArrayList<>(neighbors));
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("{");
-
-        for (CloudLet i : result.keySet())
-            stringBuilder.append("Node:").append(i.getIndex()).append("=").append(result.get(i).toString()).append(", ");
-
-        stringBuilder.append("}");
-        return stringBuilder.toString();
+        neighbors.forEach(f -> stringBuilder.append("Node-").append(f.getIndex()).append("=").append(f.getOutDegree().size()).append(", "));
+        return stringBuilder.append("}").toString();
     }
 
 
@@ -214,11 +162,7 @@ public class CloudLetGraph {
     public String toString() {
         StringBuilder s = new StringBuilder();
         for (CloudLet v : neighbors) {
-            List<Integer> edges = new ArrayList<>();
-            for (Edge i : v.getEdges()) {
-                edges.add(i.getDestination().getIndex());
-            }
-            s.append("\n").append(v.getIndex()).append(" -> ").append(edges);
+            s.append("\n").append(v.getIndex()).append(" -> ").append(v.getEdges().stream().map(e -> e.getDestination().getIndex()).collect(toList()));
         }
         return s.toString();
     }
